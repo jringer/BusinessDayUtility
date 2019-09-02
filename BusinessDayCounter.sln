@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.779
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessDayCounter", "BusinessDayCounter\BusinessDayCounter.csproj", "{A7E9A349-6F78-4A93-943E-D71E4A00C3D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusDayCounterTests", "BusDayCounterTests\BusDayCounterTests.csproj", "{B973235A-9A54-4E46-8703-16D90A86867C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A7E9A349-6F78-4A93-943E-D71E4A00C3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7E9A349-6F78-4A93-943E-D71E4A00C3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7E9A349-6F78-4A93-943E-D71E4A00C3D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B973235A-9A54-4E46-8703-16D90A86867C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B973235A-9A54-4E46-8703-16D90A86867C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B973235A-9A54-4E46-8703-16D90A86867C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B973235A-9A54-4E46-8703-16D90A86867C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
