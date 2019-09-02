@@ -4,12 +4,17 @@ using System.Collections.Generic;
 public class BusinessDayCounter
 {
 
-    private static bool IsWeekday(int dateIndex)
+    private static bool IsWeekend(int dateIndex)
     {
-        return !(dateIndex == 0 || dateIndex == 6);
+        return dateIndex == 0 || dateIndex == 6;
     }
     
     public static int WeekdaysBetweenTwoDates(DateTime firstDate, DateTime secondDate)
+    {
+        return BusinessDaysBetweenTwoDates(firstDate, secondDate, new List<DateTime>());
+    }
+
+    public static int BusinessDaysBetweenTwoDates(DateTime firstDate, DateTime secondDate, IList<DateTime> publicHolidays)
     {
         TimeSpan timeSpan = secondDate.Subtract(firstDate);
 
@@ -17,7 +22,7 @@ public class BusinessDayCounter
         int totalDays = Math.Max(0, (timeSpan.Days - 1));
 
         // 5 days for each complete week plus remaining days
-        int totalWeekdays = ((totalDays / 7) * 5) + totalDays % 7;
+        int businessDays = ((totalDays / 7) * 5) + totalDays % 7;
 
         if (totalDays > 0)
         {
@@ -25,18 +30,22 @@ public class BusinessDayCounter
             int lastDayIndex = (int)secondDate.DayOfWeek - 1;
 
             // Remove a weekday if first day in range is Sunday or last day is Saturday
-            if (!IsWeekday(firstDayIndex))
-                totalWeekdays--;
-            if (!IsWeekday(lastDayIndex))
-                totalWeekdays--;
+            if (IsWeekend(firstDayIndex))
+                businessDays--;
+            if (IsWeekend(lastDayIndex))
+                businessDays--;
         }
 
-        return totalWeekdays;
-    }
+        // Loop over public holidays and remove if with range and not weekend
+        foreach (DateTime publicHoliday in publicHolidays)
+        {
+            int pubHolDayIndex = (int)publicHoliday.DayOfWeek;
 
-    public static int BusinessDaysBetweenTwoDates(DateTime firstDate, DateTime secondDate, IList<DateTime> publicHolidays)
-    {
-        throw new NotImplementedException();
+            if (!IsWeekend(pubHolDayIndex) && publicHoliday > firstDate && publicHoliday < secondDate)
+                businessDays--;
+        }
+
+        return businessDays;
     }
 
 }
