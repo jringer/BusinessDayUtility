@@ -1,51 +1,83 @@
-﻿using System;
+﻿using BusinessDayUtility.Extensions;
+using BusinessDayUtility.PublicHolidays;
+using System;
 using System.Collections.Generic;
 
-public class BusinessDayCounter
+namespace BusinessDayUtility
 {
-
-    private static bool IsWeekend(int dateIndex)
+    /// <summary>
+    /// Counts weekdays and business days between a provided range
+    /// </summary>
+    public class BusinessDayCounter
     {
-        return dateIndex == 0 || dateIndex == 6;
-    }
-    
-    public static int WeekdaysBetweenTwoDates(DateTime firstDate, DateTime secondDate)
-    {
-        return BusinessDaysBetweenTwoDates(firstDate, secondDate, new List<DateTime>());
-    }
 
-    public static int BusinessDaysBetweenTwoDates(DateTime firstDate, DateTime secondDate, IList<DateTime> publicHolidays)
-    {
-        TimeSpan timeSpan = secondDate.Subtract(firstDate);
-
-        // Subtract 1 because looking at exclusive range between dates
-        int totalDays = Math.Max(0, (timeSpan.Days - 1));
-
-        // 5 days for each complete week plus remaining days
-        int businessDays = ((totalDays / 7) * 5) + totalDays % 7;
-
-        if (totalDays > 0)
+        /// <summary>
+        /// Returns the number of weekdays between two dates
+        /// </summary>
+        public static int WeekdaysBetweenTwoDates(DateTime firstDate, DateTime secondDate)
         {
-            int firstDayIndex = ((int)firstDate.DayOfWeek + 1) % 6;
-            int lastDayIndex = (int)secondDate.DayOfWeek - 1;
+            TimeSpan timeSpan = secondDate.Subtract(firstDate);
 
-            // Remove a weekday if first day in range is Sunday or last day is Saturday
-            if (IsWeekend(firstDayIndex))
-                businessDays--;
-            if (IsWeekend(lastDayIndex))
-                businessDays--;
+            // Subtract 1 because looking at exclusive range between dates
+            int totalDays = Math.Max(0, (timeSpan.Days - 1));
+
+            // 5 days for each complete week
+            int weekdays = (totalDays / 7) * 5;
+
+            int remainingDays = totalDays % 7;
+
+            for (int i = 1; i < remainingDays + 1; i++)
+            {
+                if (!firstDate.AddDays(i).IsWeekend())
+                    weekdays++;
+            }
+
+            return weekdays;
         }
 
-        // Loop over public holidays and remove if with range and not weekend
-        foreach (DateTime publicHoliday in publicHolidays)
+        /// <summary>
+        /// Returns the number of business days between two dates
+        /// using a list of public holidays
+        /// </summary>
+        public static int BusinessDaysBetweenTwoDates(DateTime firstDate, DateTime secondDate, IList<DateTime> publicHolidays)
         {
-            int pubHolDayIndex = (int)publicHoliday.DayOfWeek;
+            int businessDays = WeekdaysBetweenTwoDates(firstDate, secondDate);
 
-            if (!IsWeekend(pubHolDayIndex) && publicHoliday > firstDate && publicHoliday < secondDate)
-                businessDays--;
+            HashSet<DateTime> visitedDates = new HashSet<DateTime>();
+
+            // Loop over public holidays and remove if within range and is unvisited weekday
+            foreach (DateTime publicHoliday in publicHolidays)
+            {
+                if (!publicHoliday.IsWeekend() && publicHoliday > firstDate && publicHoliday < secondDate && !visitedDates.Contains(publicHoliday))
+                {
+                    visitedDates.Add(publicHoliday);
+                    businessDays--;
+                }
+            }
+
+            return businessDays;
         }
 
-        return businessDays;
-    }
+        /// <summary>
+        /// Returns the number of business days between two dates
+        /// using a list of public holiday rules
+        /// </summary>
+        public static int BusinessDaysBetweenTwoDates(DateTime firstDate, DateTime secondDate, IList<PublicHoliday> publicHolidays)
+        {
+            // Store one datetime object per public holiday per year within range
+            DateTime[] pubHolDates = new DateTime[(Math.Max(0, secondDate.Year - firstDate.Year) + 1) * publicHolidays.Count];
 
+            int i = 0;
+            for (int year = firstDate.Year; year <= secondDate.Year; year++)
+            {
+                foreach (PublicHoliday publicHoliday in publicHolidays)
+                {
+                    pubHolDates[i] = publicHoliday.GetDate(year);
+                    i++;
+                }
+            }
+
+            return BusinessDaysBetweenTwoDates(firstDate, secondDate, pubHolDates);
+        }
+    }
 }

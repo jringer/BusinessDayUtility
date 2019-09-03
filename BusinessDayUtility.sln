@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.779
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessDayCounter", "BusinessDayCounter\BusinessDayCounter.csproj", "{A7E9A349-6F78-4A93-943E-D71E4A00C3D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessDayUtility", "BusinessDayCounter\BusinessDayUtility.csproj", "{A7E9A349-6F78-4A93-943E-D71E4A00C3D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusDayCounterTests", "BusDayCounterTests\BusDayCounterTests.csproj", "{B973235A-9A54-4E46-8703-16D90A86867C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessDayUtility.Tests", "BusDayCounterTests\BusinessDayUtility.Tests.csproj", "{B973235A-9A54-4E46-8703-16D90A86867C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
