@@ -24,6 +24,12 @@ namespace BusinessDayUtility.PublicHolidays
 
         public OccurenceHoliday(int month, int week, DayOfWeek weekday)
         {
+            if (month < 1 || month > 12)
+                throw new ArgumentOutOfRangeException();
+
+            if (week < 1 || week > 4)
+                throw new ArgumentOutOfRangeException();
+
             this.month = month;
             this.week = week;
             this.weekday = weekday;

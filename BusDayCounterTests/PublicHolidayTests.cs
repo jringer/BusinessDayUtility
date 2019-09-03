@@ -13,6 +13,38 @@ namespace Tests
         }
 
         [TestCase]
+        public void CreatePublicHolidayDate_InvalidInput_OutBoundException()
+        {
+            Assert.That(() => new PublicHoliday(14, 5),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+
+            Assert.That(() => new PublicHoliday(0, 5),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+
+            Assert.That(() => new PublicHoliday(14, 0),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+
+            Assert.That(() => new PublicHoliday(12, 40),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [TestCase]
+        public void CreateOccurenceHolidayDate_InvalidInput_OutBoundException()
+        {
+            Assert.That(() => new OccurenceHoliday(4, 5, DayOfWeek.Monday),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+
+            Assert.That(() => new OccurenceHoliday(12, 0, DayOfWeek.Wednesday),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+
+            Assert.That(() => new OccurenceHoliday(0, 3, DayOfWeek.Monday),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+
+            Assert.That(() => new OccurenceHoliday(1, 0, DayOfWeek.Monday),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [TestCase]
         public void GetPublicHolidayDate_ValidInput_Calculated()
         {
             Assert.AreEqual(new DateTime(2012, 2, 2), new PublicHoliday(2, 2).GetDate(2012));

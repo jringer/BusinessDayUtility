@@ -24,6 +24,12 @@ namespace BusinessDayUtility.PublicHolidays
 
         public PublicHoliday(int month, int day)
         {
+            if (month < 1 || month > 12)
+                throw new ArgumentOutOfRangeException();
+
+            if (day < 1 || day > 31)
+                throw new ArgumentOutOfRangeException();
+
             this.month = month;
             this.day = day;
         }
